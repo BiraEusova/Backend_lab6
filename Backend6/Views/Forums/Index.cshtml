@@ -1,0 +1,58 @@
+﻿@model Backend6.Models.Forum
+
+@{
+    ViewData["Title"] = "Forum";
+}
+
+<h2>@ViewBag.Forum.Name</h2>
+<p>@ViewBag.Forum.Description</p>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <a asp-action="Create" asp-controller="ForumTopics" asp-route-forumId="@ViewBag.Forum.Id">Create new topic</a>
+    </p>
+}
+
+<div class="panel panel-default">
+    <table class="table table-striped">
+        <tbody>
+            @foreach (var topic in ViewBag.Forum.ForumTopics)
+            {
+                <tr>
+                    <td>
+                        <a style="font-size: 1.3em" asp-action="Index" asp-controller="ForumTopics" asp-route-topicId="@topic.Id">@topic.Name</a>
+                        @if (User.IsInRole(ApplicationRoles.Administrators))
+                        {
+                            <span>| </span><a asp-action="Edit" asp-controller="ForumTopics" asp-route-topicId="@topic.Id">Edit</a>
+                            <span>| </span><a asp-action="Delete" asp-controller="ForumTopics" asp-route-topicId="@topic.Id">Delete</a>
+                        }<br />
+                        <span>@topic.Creator.UserName, @topic.Created</span>
+                    </td>
+                    <td style="width: 100px">
+                        <span>@topic.ForumMessages.Count replies</span>
+                    </td>
+                    <td style="width: 220px">
+                        @if (topic.ForumMessages.Count == 0)
+                        {
+                            <span>@topic.Creator.UserName</span><br />
+                            <span>@topic.Created</span>
+                        }
+                        else
+                        {
+                            var messages = topic.ForumMessages;
+                            var dynamicMessages = (IEnumerable<dynamic>)messages;
+                            var lastMessage = dynamicMessages.OrderByDescending(x => x.Created).ToList().Last();
+
+                            <span>@lastMessage.Creator.UserName</span><br />
+                            <span>@lastMessage.Created</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Backend6.Models.ForumCategory>
+
+@{
+    ViewData["Title"] = "Forum";
+}
+
+<h2>Forum</h2>
+
+@foreach (var item in Model)
+{
+    <div class="panel panel-default forum-category">
+        <div class="panel-heading">
+            <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
+            @if (User.IsInRole(ApplicationRoles.Administrators))
+            {
+                <span>| </span><a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <span>| </span><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <span>| </span><a asp-action="Create" asp-controller="Forums" asp-route-forumCategoryId="@item.Id">Create forum</a>
+            }
+        </div>
+        <table class="table table-striped">
+            <tbody>
+                @foreach (var forum in item.Forums)
+                {
+                <tr>
+                    <td>
+                        <a class="forum-name" asp-action="Index" asp-controller="Forums" asp-route-forumId="@forum.Id">@forum.Name</a>
+                        @if (User.IsInRole(ApplicationRoles.Administrators))
+                        {
+                            <span>| </span><a asp-action="Edit" asp-controller="Forums" asp-route-forumId="@forum.Id">Edit</a>
+                            <span>| </span><a asp-action="Delete" asp-controller="Forums" asp-route-forumId="@forum.Id">Delete</a>
+                        }                      
+                        <p>@forum.Description</p>
+                    </td>
+                    <td style="width: 150px">@forum.ForumTopics.Count() topics</td>
+                </tr>
+                }                
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (User.IsInRole(ApplicationRoles.Administrators))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a asp-action="Create">Create new category</a>
+        </div>
+    </div>
+}
+
+

@@ -1,0 +1,35 @@
+﻿@model Backend6.Models.ViewModels.ForumTopicEditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit topic</h2>
+
+<div class="blog-post-editor">
+    <form asp-action="Edit" asp-route-topicId="@ViewBag.Topic.Id">
+        <div class="form-horizontal">
+            <hr />
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index" asp-controller="Forums" asp-route-forumId="@ViewBag.Topic.ForumId">Back to forum topics</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
